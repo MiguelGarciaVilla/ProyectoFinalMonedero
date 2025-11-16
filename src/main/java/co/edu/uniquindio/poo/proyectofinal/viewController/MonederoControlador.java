@@ -33,17 +33,19 @@ public class MonederoControlador {
     @FXML private TextField fieldMontoProgramado;
     @FXML private TextField fieldDestinoProgramado;
     @FXML private DatePicker datePickerFecha;
-    @FXML private ComboBox<Periodicidad> comboPeriodicidad; // Usamos el Enum directamente
+    @FXML private ComboBox<Periodicidad> comboPeriodicidad;
     @FXML private Button btnProgramarTx;
     @FXML private ListView<String> listBeneficios;
     @FXML private Button btnCanjear;
+    @FXML private Button btnEjecutarAnalisis;
+
 
     private Cliente clientePrincipal;
     private Cliente clienteDestinoDemo;
     private ServicioTransacciones servicioTx;
     private ServicioPuntos servicioPuntos;
     private GestorProgramador gestorProgramador;
-
+    private ServicioAnalitica servicioAnalitica;
     private Map<String, Monedero> monederoMap = new HashMap<>();
     private Map<String, Beneficio> beneficioMap = new HashMap<>();
 
@@ -72,6 +74,7 @@ public class MonederoControlador {
         this.servicioTx = new ServicioTransacciones();
         this.servicioPuntos = new ServicioPuntos();
         this.gestorProgramador = new GestorProgramador(servicioTx);
+        this.servicioAnalitica = new ServicioAnalitica();
         this.clientePrincipal = new Cliente("C001", "Miguel Garcia", "kokakola2508@gmail.com");
         this.clienteDestinoDemo = new Cliente("C002", "Luis Torres", "ju4nd4707@gmail.com");
 
@@ -248,6 +251,15 @@ public class MonederoControlador {
             log(String.format("Error: No tienes suficientes puntos. (Necesitas %d, Tienes %d)",
                     beneficio.getPuntosRequeridos(), clientePrincipal.getPuntos()));
         }
+    }
+
+    @FXML
+    private void handleEjecutarAnalisis() {
+        LocalDate fin = LocalDate.now();
+        LocalDate inicio = fin.minusDays(30);
+        log("\n--- Solicitando Reporte de Gastos (Últimos 30 días) ---");
+        String reporte = servicioAnalitica.generarReporteGasto(clientePrincipal, inicio, fin);
+        log(reporte);
     }
 
 

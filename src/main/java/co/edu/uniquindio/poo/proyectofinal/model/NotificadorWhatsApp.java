@@ -9,10 +9,10 @@ import java.net.URI;
 import java.math.BigDecimal;
 
 public class NotificadorWhatsApp implements INotificador{
-    public static final String ACCOUNT_SID = "AC45f78ed16b157bfffa59ebb506c1175d";
+    public static final String ACCOUNT_SID = "informacion sensurada por github";
     public static final String AUTH_TOKEN = "fbd5c644e3c7816a09d1035dfa679b15";
     private static final String FROM_NUMBER = "whatsapp:+14155238886";
-    private static final String TO_NUMBER = "whatsapp:+573183110437";
+    private static final String TO_NUMBER = "whatsapp:informacion sensurada por github";
 
     public NotificadorWhatsApp() {
         try {

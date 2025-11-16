@@ -1,10 +1,7 @@
 package co.edu.uniquindio.poo.proyectofinal.viewController;
 
 
-import co.edu.uniquindio.poo.proyectofinal.model.Cliente;
-import co.edu.uniquindio.poo.proyectofinal.model.INotificador;
-import co.edu.uniquindio.poo.proyectofinal.model.Monedero;
-import co.edu.uniquindio.poo.proyectofinal.model.ServicioTransacciones;
+import co.edu.uniquindio.poo.proyectofinal.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
 
 public class MonederoControlador {
 
@@ -30,13 +28,24 @@ public class MonederoControlador {
 
     @FXML private TextField fieldTransferMonto;
     @FXML private TextField fieldTransferDestino;
+
     @FXML private Button btnTransferir;
+    @FXML private TextField fieldMontoProgramado;
+    @FXML private TextField fieldDestinoProgramado;
+    @FXML private DatePicker datePickerFecha;
+    @FXML private ComboBox<Periodicidad> comboPeriodicidad; // Usamos el Enum directamente
+    @FXML private Button btnProgramarTx;
+    @FXML private ListView<String> listBeneficios;
+    @FXML private Button btnCanjear;
 
     private Cliente clientePrincipal;
     private Cliente clienteDestinoDemo;
     private ServicioTransacciones servicioTx;
+    private ServicioPuntos servicioPuntos;
+    private GestorProgramador gestorProgramador;
 
     private Map<String, Monedero> monederoMap = new HashMap<>();
+    private Map<String, Beneficio> beneficioMap = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -45,7 +54,11 @@ public class MonederoControlador {
             Platform.runLater(() -> log(mensaje));
         };
         servicioTx.registrarNotificador(notificadorGUI);
+        servicioTx.registrarNotificador(new NotificadorWhatsApp());
+
         cargarDatosCliente();
+        configurarComboPeriodicidad();
+        cargarBeneficiosDisponibles();
         comboMonederos.getSelectionModel().selectedItemProperty().addListener(
                 (options, oldValue, newValue) -> {
                     if (newValue != null) {
@@ -57,6 +70,8 @@ public class MonederoControlador {
 
     private void configurar() {
         this.servicioTx = new ServicioTransacciones();
+        this.servicioPuntos = new ServicioPuntos();
+        this.gestorProgramador = new GestorProgramador(servicioTx);
         this.clientePrincipal = new Cliente("C001", "Miguel Garcia", "kokakola2508@gmail.com");
         this.clienteDestinoDemo = new Cliente("C002", "Luis Torres", "ju4nd4707@gmail.com");
 
@@ -64,10 +79,31 @@ public class MonederoControlador {
         Monedero mDiarioMig = new Monedero("MIG-02", 300.0, "Gastos Diarios");
         clientePrincipal.agregarMonedero(mAhorroMig);
         clientePrincipal.agregarMonedero(mDiarioMig);
+
         Monedero mDiarioLuis = new Monedero("LUIS-01",200.0 , "Gastos Diarios");
         clienteDestinoDemo.agregarMonedero(mDiarioLuis);
+
         log("Sistema iniciado. Clientes de demostración cargados.");
     }
+
+    private void configurarComboPeriodicidad() {
+        comboPeriodicidad.getItems().setAll(Periodicidad.values());
+        comboPeriodicidad.getSelectionModel().selectFirst();
+    }
+
+    private void cargarBeneficiosDisponibles() {
+        beneficioMap.clear();
+        listBeneficios.getItems().clear();
+
+        for (Beneficio b : servicioPuntos.getBeneficiosDisponibles()) {
+            String displayText = String.format("%s (Costo: %d puntos)",
+                    b.getDescripcion(), b.getPuntosRequeridos());
+            beneficioMap.put(displayText, b);
+            listBeneficios.getItems().add(displayText);
+        }
+    }
+
+
 
     private void cargarDatosCliente() {
         labelClienteNombre.setText(clientePrincipal.getNombre());
@@ -160,6 +196,60 @@ public class MonederoControlador {
         fieldTransferDestino.clear();
         actualizarLabelsCliente();
     }
+
+    @FXML
+    private void handleProgramarTransferencia() {
+        Monedero mOrigen = getMonederoSeleccionado();
+        Optional<Double> monto = parseDouble(fieldMontoProgramado.getText());
+        String idDestino = fieldDestinoProgramado.getText();
+        LocalDate fecha = datePickerFecha.getValue();
+        Periodicidad periodicidad = comboPeriodicidad.getValue();
+
+        if (mOrigen == null) { log("Error: Debe seleccionar un monedero de origen."); return; }
+        if (monto.isEmpty() || monto.get() <= 0) { log("Error: Ingrese un monto válido."); return; }
+        if (idDestino == null || idDestino.trim().isEmpty()) { log("Error: Debe ingresar un ID de destino."); return; }
+        Monedero mDestino = buscarMonederoDemo(idDestino);
+        if (mDestino == null) { log("Error: No se encontró el monedero de destino: " + idDestino); return; }
+        if (fecha == null || fecha.isBefore(LocalDate.now())) { log("Error: Seleccione una fecha futura."); return; }
+        if (periodicidad == null) { log("Error: Seleccione una periodicidad."); return; }
+
+        TransaccionProgramada tx = new TransaccionProgramada(
+                clientePrincipal, mOrigen, mDestino, monto.get(), fecha, periodicidad
+        );
+        gestorProgramador.programarTransaccion(tx);
+
+        log(String.format("Éxito: Transferencia de $%.2f a %s programada para %s.",
+                monto.get(), idDestino, fecha.toString()));
+
+        fieldMontoProgramado.clear();
+        fieldDestinoProgramado.clear();
+        datePickerFecha.setValue(null);
+    }
+
+    @FXML
+    private void handleCanjearBeneficio() {
+        String itemSeleccionado = listBeneficios.getSelectionModel().getSelectedItem();
+        if (itemSeleccionado == null) {
+            log("Error: Debe seleccionar un beneficio de la lista.");
+            return;
+        }
+        Beneficio beneficio = beneficioMap.get(itemSeleccionado);
+        boolean exito = servicioPuntos.canjearBeneficio(clientePrincipal, beneficio);
+        if (exito) {
+            log(String.format("¡Canje Exitoso! Se gastaron %d puntos.", beneficio.getPuntosRequeridos()));
+            Monedero monederoDefecto = getMonederoSeleccionado();
+            if (monederoDefecto == null) monederoDefecto = clientePrincipal.getMonederos().get(0);
+
+            servicioTx.aplicarBono(clientePrincipal, monederoDefecto, beneficio.getMontoBono(), LocalDate.now());
+            log(String.format("Has recibido un bono de $%.2f en tu monedero.", beneficio.getMontoBono()));
+            actualizarLabelsCliente();
+
+        } else {
+            log(String.format("Error: No tienes suficientes puntos. (Necesitas %d, Tienes %d)",
+                    beneficio.getPuntosRequeridos(), clientePrincipal.getPuntos()));
+        }
+    }
+
 
     private Monedero getMonederoSeleccionado() {
         String claveSeleccionada = comboMonederos.getSelectionModel().getSelectedItem();

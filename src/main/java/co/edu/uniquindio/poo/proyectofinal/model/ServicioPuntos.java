@@ -1,46 +1,42 @@
 package co.edu.uniquindio.poo.proyectofinal.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ServicioPuntos {
-    private final Map<String, Beneficio> beneficiosDisponibles;
+    private final List<Beneficio> beneficiosDisponibles;
 
     public ServicioPuntos() {
-        this.beneficiosDisponibles = new HashMap<>();
+        this.beneficiosDisponibles = new ArrayList<>();
         cargarBeneficios();
     }
 
     private void cargarBeneficios() {
-        beneficiosDisponibles.put("B100", new Beneficio("B100", "10% de descuento en comisión de transferencias", 100));
-        beneficiosDisponibles.put("B500", new Beneficio("B500", "Un mes sin cargos por retiros", 500));
-        beneficiosDisponibles.put("B1000", new Beneficio("B1000", "Bono de saldo de 50 unidades", 1000));
+        beneficiosDisponibles.add(new Beneficio("B100", "Bono de $10", 100, 10.0));
+        beneficiosDisponibles.add(new Beneficio("B500", "Bono de $50", 500, 50.0));
+        beneficiosDisponibles.add(new Beneficio("B1000", "Bono de $120", 1000, 120.0));
     }
 
-    public void mostrarBeneficios() {
-        System.out.println("--- Beneficios Disponibles para Canjear ---");
-        for (Beneficio b : beneficiosDisponibles.values()) {
-            System.out.printf("- ID: %s (%d Puntos): %s\n",
-                    b.getIdBeneficio(), b.getPuntosRequeridos(), b.getDescripcion());
-        }
-        System.out.println("\n");
+    public Collection<Beneficio> getBeneficiosDisponibles() {
+        return beneficiosDisponibles;
     }
 
-    public void canjearBeneficio(Cliente cliente, String idBeneficio) {
-        Beneficio beneficio = beneficiosDisponibles.get(idBeneficio);
+    public boolean canjearBeneficio(Cliente cliente, Beneficio beneficio) {
         if (beneficio == null) {
-            System.out.println("Error: El beneficio con ID " + idBeneficio + " no existe.");
-            return;
+            return false;
         }
-        if (cliente.getPuntos() < beneficio.getPuntosRequeridos()) {
-            System.out.printf("Canje Fallido: %s no tiene suficientes puntos para '%s'. (Req: %d, Tiene: %d)\n", cliente.getNombre(), beneficio.getDescripcion(), beneficio.getPuntosRequeridos(), cliente.getPuntos());
-            return;
-        }
-
-        boolean exito = cliente.restarPuntos(beneficio.getPuntosRequeridos());
-        if (exito) {
-            System.out.printf("¡Canje Exitoso! %s ha obtenido '%s'.\n", cliente.getNombre(), beneficio.getDescripcion());
-            System.out.printf("Puntos restantes de %s: %d\n", cliente.getNombre(), cliente.getPuntos());
+        if (cliente.getPuntos() >= beneficio.getPuntosRequeridos()) {
+            cliente.restarPuntos(beneficio.getPuntosRequeridos());
+            return true;
+        } else {
+            return false;
         }
     }
+
+
 }
+
+
+
+
+
+

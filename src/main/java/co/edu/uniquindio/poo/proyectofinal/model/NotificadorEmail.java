@@ -30,7 +30,7 @@ public class NotificadorEmail implements INotificador {
     @Override
     public void enviarNotificacion(Cliente cliente, String mensaje) {
         String emailDestino = cliente.getEmail();
-        System.out.println("--- [ENVIANDO EMAIL REAL VÍA GMAIL] ---");
+        System.out.println("[ENVIANDO EMAIL]");
 
         try {
             Message mimeMessage = new MimeMessage(session);
@@ -42,7 +42,7 @@ public class NotificadorEmail implements INotificador {
             Transport.send(mimeMessage);
 
             System.out.println("Email enviado exitosamente a " + emailDestino);
-            System.out.println("----------------------------------------\n");
+            System.out.println("\n");
 
         } catch (MessagingException e) {
             System.err.println("Error al enviar el email: " + e.getMessage());

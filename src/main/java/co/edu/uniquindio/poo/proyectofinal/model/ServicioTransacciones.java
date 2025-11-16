@@ -93,4 +93,10 @@ public class ServicioTransacciones {
         }
     }
 
+    public void aplicarBono(Cliente cliente, Monedero destino, double monto, LocalDate fecha) {
+        System.out.printf("Procesando BONO de %.2f para %s...\n", monto, cliente.getNombre());
+        Bono b = new Bono(destino, monto, fecha);
+        procesar(cliente, b, destino);
+    }
+
 }

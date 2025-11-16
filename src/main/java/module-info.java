@@ -12,6 +12,7 @@ module co.edu.uniquindio.poo.proyectofinal {
     requires com.almasb.fxgl.all;
     requires jakarta.mail;
     requires javafx.graphics;
+    requires twilio;
 
     exports co.edu.uniquindio.poo.proyectofinal.app;
     opens co.edu.uniquindio.poo.proyectofinal.viewController to javafx.fxml;

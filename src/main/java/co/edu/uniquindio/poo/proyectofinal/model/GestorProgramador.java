@@ -17,12 +17,12 @@ public class GestorProgramador {
 
     public void programarTransaccion(TransaccionProgramada tx) {
         this.colaDeTransacciones.add(tx);
-        System.out.printf("[Gestor] Nueva tx programada (%s) para el %s.\n",
+        System.out.printf("[Gestor] Nueva transaccion programada (%s) para el %s.\n",
                 tx.getId(), tx.getFechaEjecucion().toString());
     }
 
     public void procesarCola(LocalDate fechaActual) {
-        System.out.printf("\n--- PROCESANDO COLA DE TX PROGRAMADAS (Día: %s) ---\n", fechaActual.toString());
+        System.out.printf("\n--- PROCESANDO COLA DE TRANSACCIONES PROGRAMADAS (Día: %s) ---\n", fechaActual.toString());
 
         colaDeTransacciones.sort(Comparator.comparing(TransaccionProgramada::getFechaEjecucion));
 
@@ -31,7 +31,7 @@ public class GestorProgramador {
             TransaccionProgramada tx = iterador.next();
 
             if (!tx.getFechaEjecucion().isAfter(fechaActual)) {
-                System.out.printf("Ejecutando tx programada: %s...\n", tx.getId());
+                System.out.printf("Ejecutando transaccion programada: %s...\n", tx.getId());
 
                 servicioTransacciones.realizarTransferencia(
                         tx.getClienteOrigen(),
@@ -46,7 +46,7 @@ public class GestorProgramador {
                     iterador.remove();
                 } else if (tx.getPeriodicidad() == Periodicidad.MENSUAL) {
                     tx.setFechaEjecucion(fechaActual.plusMonths(1));
-                    System.out.printf("Tx (%s) reprogramada para %s.\n",
+                    System.out.printf("Transaccion (%s) reprogramada para %s.\n",
                             tx.getId(), tx.getFechaEjecucion().toString());
                 } else if (tx.getPeriodicidad() == Periodicidad.SEMANAL) {
                     tx.setFechaEjecucion(fechaActual.plusWeeks(1));

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 public class NotificadorWhatsApp implements INotificador{
     public static final String ACCOUNT_SID = "informacion sensurada por github";
-    public static final String AUTH_TOKEN = "fbd5c644e3c7816a09d1035dfa679b15";
+    public static final String AUTH_TOKEN = "informacion sensurada por github";
     private static final String FROM_NUMBER = "whatsapp:+14155238886";
     private static final String TO_NUMBER = "whatsapp:informacion sensurada por github";
 

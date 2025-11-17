@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.poo.proyectofinal.viewController.MonederoControlador">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.poo.proyectofinal.viewController.MonederoControlador">
     <top>
-        <VBox alignment="CENTER" prefHeight="56.0" prefWidth="800.0" spacing="10.0" style="-fx-background-color: #333;" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" prefHeight="59.0" prefWidth="800.0" spacing="10.0" style="-fx-background-color: #333;" BorderPane.alignment="CENTER">
             <children>
                 <Label text="Monedero Virtual" textFill="WHITE">
                     <font>
@@ -18,7 +18,7 @@
         </VBox>
     </top>
     <left>
-        <VBox prefHeight="389.0" prefWidth="245.0" spacing="15.0" style="-fx-background-color: #f4f4f4; -fx-padding: 20;" BorderPane.alignment="CENTER">
+        <VBox prefHeight="379.0" prefWidth="247.0" spacing="15.0" style="-fx-background-color: #f4f4f4; -fx-padding: 20;" BorderPane.alignment="CENTER">
             <children>
                 <Label text="Bienvenido,">
                     <font>
@@ -67,7 +67,7 @@
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Label>
-                <Label fx:id="labelSaldoActual" text="0.00" textFill="#27ae60">
+                <Label fx:id="labelSaldoActual" text="0.00" textFill="#009a40">
                     <font>
                         <Font name="System Bold" size="28.0" />
                     </font>

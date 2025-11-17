@@ -7,6 +7,11 @@ public class Banco {
 
     private static Banco instancia;
     private final List<Cliente> clientes;
+    private List<Monedero>  monederos;
+    private List<Beneficio> beneficios;
+    private List<Transaccion> transacciones;
+    private List<TransaccionProgramada> transaccionProgramadas;
+
 
     public Banco() {
         clientes = new ArrayList<>();
@@ -25,8 +30,8 @@ public class Banco {
         c1.agregarMonedero(new Monedero("MIG-01", 1500.0, "Ahorros"));
         c1.agregarMonedero(new Monedero("MIG-02", 300.0, "Gastos Diarios"));
 
-        Cliente c2 = new Cliente("C002", "Juan David", "email@luis.com", "juan", "4321");
-        c2.agregarMonedero(new Monedero("LUIS-01", 500.0, "Gastos Diarios"));
+        Cliente c2 = new Cliente("C002", "Juan David", "email@juan.com", "juan", "4321");
+        c2.agregarMonedero(new Monedero("JUAN-01", 500.0, "Gastos Diarios"));
 
         clientes.add(c1);
         clientes.add(c2);

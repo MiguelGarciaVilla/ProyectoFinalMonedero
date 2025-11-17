@@ -81,8 +81,6 @@ public class MonederoControlador {
     }
     public void initData(Cliente cliente) {
         this.clientePrincipal = cliente;
-
-        // Ahora que tenemos el cliente, cargamos su info en la GUI
         cargarDatosCliente();
         configurarComboPeriodicidad();
         cargarBeneficiosDisponibles();

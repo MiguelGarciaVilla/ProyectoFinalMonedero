@@ -7,16 +7,10 @@ import java.util.Optional;
 
 public class ServicioTransacciones {
     private final List<INotificador> notificadores;
-    private List<Cliente> listaClientes;
-    private List<Transaccion> listaTransacciones;
-    private List<Beneficio> listaBeneficios;
 
     public ServicioTransacciones() {
         this.notificadores = new ArrayList<>();
         this.notificadores.add(new NotificadorEmail());
-        this.listaClientes = new ArrayList<>();
-        this.listaTransacciones = new ArrayList<>();
-        this.listaBeneficios = new ArrayList<>();
     }
 
     public void registrarNotificador(INotificador notificador) {

@@ -1,0 +1,159 @@
+/* Fondo general de la aplicación */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #f5f7fa, #e4ebf1);
+    -fx-font-family: "System";
+}
+
+/* ========== HEADER ========== */
+
+.header-bar {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 10 20;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.header-subtitle {
+    -fx-text-fill: #ecf0f1;
+    -fx-opacity: 0.9;
+}
+
+.header-client-name {
+    -fx-text-fill: #ecf0f1;
+    -fx-font-weight: bold;
+}
+
+/* ========== CARDS GENERALES ========== */
+
+.card {
+    -fx-background-color: white;
+    -fx-padding: 16;
+    -fx-spacing: 10;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);
+}
+
+.card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* ========== TEXTOS / CAMPOS ========== */
+
+.field-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.field-value {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+}
+
+.saldo-label {
+    -fx-text-fill: #27ae60;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.points-label {
+    -fx-text-fill: #2980b9;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.status-label {
+    -fx-text-fill: #16a085;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.hint-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 11px;
+}
+
+/* ========== BOTONES ========== */
+
+.primary-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+}
+
+.primary-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ecf0f1;
+    -fx-text-fill: #ecf0f1;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 5 16;
+}
+
+.secondary-button:hover {
+    -fx-border-color: #ffffff;
+    -fx-text-fill: #ffffff;
+}
+
+/* ========== TABPANE ========== */
+
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-background-insets: 0;
+    -fx-background-radius: 20 20 0 0;
+    -fx-padding: 6 16;
+}
+
+.tab-pane .tab-label {
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #ffffff;
+}
+
+/* ========== LOG PANEL ========== */
+
+.log-panel {
+    -fx-background-color: transparent;
+}
+
+.log-panel .text-area {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 8;
+}
+
+/* ========== ERRORES / INPUTS ========== */
+
+.error-label {
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 11px;
+}
+
+.input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 4;
+}
+
+/* Ajustes generales */
+.text-field, .password-field, .combo-box, .date-picker {
+    -fx-background-radius: 6;
+}

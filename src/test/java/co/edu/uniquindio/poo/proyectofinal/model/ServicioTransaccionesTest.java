@@ -16,8 +16,8 @@ class ServicioTransaccionesTest {
 
     @BeforeEach
     void setUp() {
-        clienteA = new Cliente("C001", "Miguel", "a");
-        clienteB = new Cliente("C002", "Luis", "b");
+        clienteA = new Cliente("C001", "Miguel", "a", "a", "a");
+        clienteB = new Cliente("C002", "Luis", "b", "a", "a");
 
         monederoA = new Monedero("M-MIGUEL-01",1000 , "Ahorros");
         monederoB = new Monedero("M-LUIS-01", 500, "Diario");

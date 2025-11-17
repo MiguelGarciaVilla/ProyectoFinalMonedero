@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER"
+      prefHeight="400.0" prefWidth="500.0"
+      spacing="10"
+      stylesheets="@styles.css"
+      styleClass="login-root"
+      fx:controller="co.edu.uniquindio.poo.proyectofinal.viewController.LoginController">
+
+    <children>
+        <VBox spacing="8" alignment="CENTER">
+            <children>
+                <Label text="Monedero Virtual" styleClass="app-title">
+                    <font>
+                        <Font size="26.0" />
+                    </font>
+                </Label>
+                <Label text="Iniciar sesión" styleClass="app-subtitle"/>
+            </children>
+        </VBox>
+
+        <VBox spacing="12" styleClass="card">
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="30"/>
+            </padding>
+            <children>
+                <Label text="Usuario" styleClass="field-label"/>
+                <TextField fx:id="fieldUser" promptText="Ej: miguel"/>
+
+                <Label text="Contraseña" styleClass="field-label"/>
+                <PasswordField fx:id="fieldPass" promptText="Ej: 1234"/>
+
+                <Label fx:id="labelError" textFill="RED" styleClass="error-label"/>
+
+                <Button fx:id="btnLogin"
+                        text="Ingresar"
+                        onAction="#handleLogin"
+                        styleClass="primary-button"
+                        maxWidth="Infinity"/>
+            </children>
+        </VBox>
+    </children>
+</VBox>

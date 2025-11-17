@@ -10,15 +10,21 @@ public class Cliente {
     private int puntos;
     private Rango rango;
     private String email;
+    private String usuario;
+    private String password;
 
-    public Cliente(String idCliente, String nombre, String email) {
+    public Cliente(String idCliente, String nombre, String email,String usuario, String password) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.monederos = new ArrayList<>();
         this.puntos = 0;
         this.rango = Rango.BRONCE;
         this.email = email;
+        this.usuario = usuario;
+        this.password = password;
     }
+    public String getUsuario() { return usuario; }
+    public String getPassword() { return password; }
 
     public String getEmail() {
         return email;

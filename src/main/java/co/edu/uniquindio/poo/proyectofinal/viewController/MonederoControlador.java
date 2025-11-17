@@ -4,7 +4,14 @@ package co.edu.uniquindio.poo.proyectofinal.viewController;
 import co.edu.uniquindio.poo.proyectofinal.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +46,11 @@ public class MonederoControlador {
     @FXML private Button btnCanjear;
     @FXML private Button btnEjecutarAnalisis;
 
+    @FXML private Button btnLogout;
+    @FXML private Label labelClienteNombreDetalle;
+
 
     private Cliente clientePrincipal;
-    private Cliente clienteDestinoDemo;
     private ServicioTransacciones servicioTx;
     private ServicioPuntos servicioPuntos;
     private GestorProgramador gestorProgramador;
@@ -51,13 +60,15 @@ public class MonederoControlador {
 
     @FXML
     public void initialize() {
-        configurar();
+        this.servicioTx = new ServicioTransacciones();
+        this.servicioPuntos = new ServicioPuntos();
+        this.gestorProgramador = new GestorProgramador(servicioTx);
+        this.servicioAnalitica = new ServicioAnalitica();
         INotificador notificadorGUI = (cliente, mensaje) -> {
             Platform.runLater(() -> log(mensaje));
         };
         servicioTx.registrarNotificador(notificadorGUI);
         servicioTx.registrarNotificador(new NotificadorWhatsApp());
-        cargarDatosCliente();
         configurarComboPeriodicidad();
         cargarBeneficiosDisponibles();
         comboMonederos.getSelectionModel().selectedItemProperty().addListener(
@@ -68,24 +79,15 @@ public class MonederoControlador {
                 }
         );
     }
+    public void initData(Cliente cliente) {
+        this.clientePrincipal = cliente;
 
-    private void configurar() {
-        this.servicioTx = new ServicioTransacciones();
-        this.servicioPuntos = new ServicioPuntos();
-        this.gestorProgramador = new GestorProgramador(servicioTx);
-        this.servicioAnalitica = new ServicioAnalitica();
-        this.clientePrincipal = new Cliente("C001", "Miguel Garcia", "kokakola2508@gmail.com");
-        this.clienteDestinoDemo = new Cliente("C002", "Luis Torres", "ju4nd4707@gmail.com");
+        // Ahora que tenemos el cliente, cargamos su info en la GUI
+        cargarDatosCliente();
+        configurarComboPeriodicidad();
+        cargarBeneficiosDisponibles();
 
-        Monedero mAhorroMig = new Monedero("MIG-01", 1500.0, "Ahorros");
-        Monedero mDiarioMig = new Monedero("MIG-02", 300.0, "Gastos Diarios");
-        clientePrincipal.agregarMonedero(mAhorroMig);
-        clientePrincipal.agregarMonedero(mDiarioMig);
-
-        Monedero mDiarioLuis = new Monedero("LUIS-01",200.0 , "Gastos Diarios");
-        clienteDestinoDemo.agregarMonedero(mDiarioLuis);
-
-        log("Sistema iniciado. Clientes de demostración cargados.");
+        log("Bienvenido al sistema, " + cliente.getNombre());
     }
 
     private void configurarComboPeriodicidad() {
@@ -108,7 +110,11 @@ public class MonederoControlador {
 
 
     private void cargarDatosCliente() {
-        labelClienteNombre.setText(clientePrincipal.getNombre());
+        String nombre = clientePrincipal.getNombre();
+        labelClienteNombre.setText(nombre);
+        if (labelClienteNombreDetalle != null) {
+            labelClienteNombreDetalle.setText(nombre);
+        }
         monederoMap.clear();
         comboMonederos.getItems().clear();
         for (Monedero m : clientePrincipal.getMonederos()) {
@@ -116,11 +122,10 @@ public class MonederoControlador {
             monederoMap.put(claveCombo, m);
             comboMonederos.getItems().add(claveCombo);
         }
-        if (!comboMonederos.getItems().isEmpty()) {
-            comboMonederos.getSelectionModel().selectFirst();
-        }
-        actualizarLabelsCliente();
+        comboMonederos.getSelectionModel().selectFirst();
+        actualizarSaldoLabel();
     }
+
 
     private void actualizarLabelsCliente() {
         labelPuntos.setText(String.valueOf(clientePrincipal.getPuntos()));
@@ -174,26 +179,31 @@ public class MonederoControlador {
     @FXML
     private void handleTransferir() {
         Monedero mOrigen = getMonederoSeleccionado();
-        if (mOrigen == null) {
-            log("Error: Debe seleccionar un monedero de origen.");
-            return;
-        }
+        if (mOrigen == null) { log("Error: Seleccione un monedero origen."); return; }
         Optional<Double> monto = parseDouble(fieldTransferMonto.getText());
-        if (monto.isEmpty() || monto.get() <= 0) {
-            log("Error: Ingrese un monto de transferencia válido.");
-            return;
-        }
+        if (monto.isEmpty() || monto.get() <= 0) { log("Error: Monto inválido."); return; }
         String idDestino = fieldTransferDestino.getText();
-        if (idDestino == null || idDestino.trim().isEmpty()) {
-            log("Error: Debe ingresar un ID de monedero de destino.");
+        if (idDestino == null || idDestino.isBlank()) { log("Error: Ingrese ID destino."); return; }
+        Monedero mDestino = buscarMonederoGlobal(idDestino);
+
+        if (mDestino == null) {
+            log("Error: El monedero destino '" + idDestino + "' no existe en el sistema.");
             return;
         }
-        Monedero mDestino = buscarMonederoDemo(idDestino);
-        if(mDestino == null) {
-            log("Error: No se encontró el monedero de destino con ID: " + idDestino);
+        if (mDestino == mOrigen) {
+            log("Error: No puedes transferir al mismo monedero.");
             return;
         }
-        servicioTx.realizarTransferencia(clientePrincipal, mOrigen, clienteDestinoDemo, mDestino, monto.get(), LocalDate.now());
+
+        Cliente clienteDestino = buscarPropietario(mDestino);
+        servicioTx.realizarTransferencia(
+                clientePrincipal,
+                mOrigen,
+                clienteDestino,
+                mDestino,
+                monto.get(),
+                LocalDate.now()
+        );
         fieldTransferMonto.clear();
         fieldTransferDestino.clear();
         actualizarLabelsCliente();
@@ -214,15 +224,21 @@ public class MonederoControlador {
         if (mDestino == null) { log("Error: No se encontró el monedero de destino: " + idDestino); return; }
         if (fecha == null || fecha.isBefore(LocalDate.now())) { log("Error: Seleccione una fecha futura."); return; }
         if (periodicidad == null) { log("Error: Seleccione una periodicidad."); return; }
+        if (mDestino == null) { log("Error: Monedero destino no encontrado."); return; }
+
+        Cliente clienteDestino = buscarPropietario(mDestino);
 
         TransaccionProgramada tx = new TransaccionProgramada(
-                clientePrincipal, mOrigen, mDestino, monto.get(), fecha, periodicidad
+                clientePrincipal,
+                getMonederoSeleccionado(),
+                mDestino,
+                parseDouble(fieldMontoProgramado.getText()).get(),
+                datePickerFecha.getValue(),
+                comboPeriodicidad.getValue()
         );
+
         gestorProgramador.programarTransaccion(tx);
-
-        log(String.format("Éxito: Transferencia de $%.2f a %s programada para %s.",
-                monto.get(), idDestino, fecha.toString()));
-
+        log("Transferencia programada exitosamente para " + clienteDestino.getNombre());
         fieldMontoProgramado.clear();
         fieldDestinoProgramado.clear();
         datePickerFecha.setValue(null);
@@ -260,6 +276,29 @@ public class MonederoControlador {
         String reporte = servicioAnalitica.generarReporteGasto(clientePrincipal, inicio, fin);
         log(reporte);
     }
+    @FXML
+    private void handleLogout(javafx.event.ActionEvent event) {
+        try {
+            // 1. Cargar el FXML del Login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinal/login.fxml"));
+            Parent root = loader.load();
+
+            // 2. Obtener la ventana actual (Stage) y cerrarla
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
+
+            // 3. Crear y mostrar la nueva ventana de Login
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Login - Monedero Virtual");
+            loginStage.setScene(new Scene(root));
+            loginStage.setResizable(false);
+            loginStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log("Error al intentar cerrar sesión.");
+        }
+    }
 
 
     private Monedero getMonederoSeleccionado() {
@@ -271,9 +310,13 @@ public class MonederoControlador {
     }
 
     private Monedero buscarMonederoDemo(String id) {
-        for (Monedero m : clienteDestinoDemo.getMonederos()) {
-            if (m.getIdMonedero().equalsIgnoreCase(id)) {
-                return m;
+        for (Cliente c : Banco.getInstancia().getClientes()) {
+            if (c == clientePrincipal) continue;
+
+            for (Monedero m : c.getMonederos()) {
+                if (m.getIdMonedero().equalsIgnoreCase(id)) {
+                    return m;
+                }
             }
         }
         return null;
@@ -281,6 +324,26 @@ public class MonederoControlador {
 
     private void log(String mensaje) {
         areaLog.appendText(mensaje + "\n");
+    }
+
+    private Monedero buscarMonederoGlobal(String idMonedero) {
+        for (Cliente c : Banco.getInstancia().getClientes()) {
+            for (Monedero m : c.getMonederos()) {
+                if (m.getIdMonedero().equalsIgnoreCase(idMonedero)) {
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Cliente buscarPropietario(Monedero m) {
+        for (Cliente c : Banco.getInstancia().getClientes()) {
+            if (c.getMonederos().contains(m)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     private Optional<Double> parseDouble(String texto) {

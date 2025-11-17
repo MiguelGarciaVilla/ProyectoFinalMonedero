@@ -10,7 +10,7 @@ class ClienteRangoTest {
     @DisplayName("Cliente debe promocionar de BRONCE a PLATA")
     void promocionARangoPlata() {
 
-        Cliente cliente = new Cliente("C001", "Test", "a");
+        Cliente cliente = new Cliente("C001", "Test", "a", "miguel", "1234");
         assertEquals(Rango.BRONCE, cliente.getRango(), "El cliente debe empezar en BRONCE");
         assertEquals(0, cliente.getPuntos());
 
@@ -29,7 +29,7 @@ class ClienteRangoTest {
     @DisplayName("Cliente debe promocionar directamente a ORO")
     void promocionDirectaAOro() {
 
-        Cliente cliente = new Cliente("C001", "Test", "b");
+        Cliente cliente = new Cliente("C001", "Test", "b", "a", "a");
         assertEquals(Rango.BRONCE, cliente.getRango());
 
         cliente.agregarPuntos(1500);

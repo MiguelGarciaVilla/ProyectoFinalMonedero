@@ -1,233 +1,350 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.poo.proyectofinal.viewController.MonederoControlador">
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uniquindio.poo.proyectofinal.viewController.MonederoControlador"
+            prefWidth="1000.0" prefHeight="650.0"
+            stylesheets="@styles.css">
+
+    <!-- =============== BARRA SUPERIOR ================= -->
     <top>
-        <VBox alignment="CENTER" prefHeight="59.0" prefWidth="800.0" spacing="10.0" style="-fx-background-color: #333;" BorderPane.alignment="CENTER">
+        <HBox spacing="15"
+              alignment="CENTER_LEFT"
+              styleClass="header-bar"
+              BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
             <children>
-                <Label text="Monedero Virtual" textFill="WHITE">
+                <Label text="Monedero Virtual" styleClass="header-title">
                     <font>
-                        <Font name="Arial Bold" size="24.0" />
+                        <Font size="22.0"/>
                     </font>
                 </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label text="Bienvenido," styleClass="header-subtitle"/>
+
+                <!-- ÚNICA etiqueta con fx:id = labelClienteNombre -->
+                <Label fx:id="labelClienteNombre"
+                       text="Nombre Cliente"
+                       styleClass="header-client-name">
+                    <font>
+                        <Font size="16.0"/>
+                    </font>
+                </Label>
+
+                <Button fx:id="btnLogout"
+                        text="Cerrar sesión"
+                        onAction="#handleLogout"
+                        styleClass="secondary-button"/>
             </children>
-        </VBox>
+        </HBox>
     </top>
-    <left>
-        <VBox prefHeight="379.0" prefWidth="247.0" spacing="15.0" style="-fx-background-color: #f4f4f4; -fx-padding: 20;" BorderPane.alignment="CENTER">
-            <children>
-                <Label text="Bienvenido,">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <Label fx:id="labelClienteNombre" text="Nombre Cliente" textFill="#2c3e50">
-                    <font>
-                        <Font name="System Bold" size="22.0" />
-                    </font>
-                </Label>
-                <Separator prefWidth="200.0" />
-                <GridPane hgap="10.0" vgap="10.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <Label text="Puntos:" />
-                        <Label text="Rango:" GridPane.rowIndex="1" />
-                        <Label fx:id="labelPuntos" text="0" textFill="#2980b9" GridPane.columnIndex="1">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="labelRango" text="Bronce" textFill="#2980b9" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </GridPane>
-                <Separator prefWidth="200.0" />
-                <Label text="Seleccione su Monedero:">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
-                </Label>
-                <ComboBox fx:id="comboMonederos" prefWidth="250.0" promptText="Mis Monederos" />
-                <Label text="Saldo Actual:">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
-                </Label>
-                <Label fx:id="labelSaldoActual" text="0.00" textFill="#009a40">
-                    <font>
-                        <Font name="System Bold" size="28.0" />
-                    </font>
-                </Label>
 
-                <Separator prefWidth="200.0" />
-                <Button fx:id="btnEjecutarAnalisis" mnemonicParsing="false" onAction="#handleEjecutarAnalisis" prefHeight="40.0" prefWidth="250.0" text="Generar Reporte de Gastos" />
-
-            </children>
-        </VBox>
-    </left>
+    <!-- =============== CONTENIDO CENTRAL ================= -->
     <center>
-        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-padding: 20;" BorderPane.alignment="CENTER">
+        <HBox spacing="20"
+              BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
             <children>
-                <Label text="Realizar Operaciones">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <TabPane prefHeight="300.0" prefWidth="510.0" tabClosingPolicy="UNAVAILABLE">
+
+
+                <VBox spacing="12"
+                      styleClass="card"
+                      HBox.hgrow="NEVER">
+                    <children>
+                        <Label text="Resumen del cliente"
+                               styleClass="card-title"/>
+
+                        <VBox spacing="4">
+                            <children>
+                                <Label text="Cliente" styleClass="field-label"/>
+                                <!-- Segunda etiqueta para el nombre, con otro fx:id -->
+                                <Label fx:id="labelClienteNombreDetalle"
+                                       text="Nombre Cliente"
+                                       styleClass="field-value"/>
+                            </children>
+                        </VBox>
+
+                        <Separator/>
+
+                        <VBox spacing="8">
+                            <children>
+                                <Label text="Saldo actual" styleClass="field-label"/>
+                                <Label fx:id="labelSaldoActual"
+                                       text="0.00"
+                                       styleClass="saldo-label"/>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8">
+                            <children>
+                                <Label text="Puntos acumulados" styleClass="field-label"/>
+                                <Label fx:id="labelPuntos"
+                                       text="0"
+                                       styleClass="points-label"/>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8">
+                            <children>
+                                <Label text="Rango del cliente" styleClass="field-label"/>
+                                <Label fx:id="labelRango"
+                                       text="Básico"
+                                       styleClass="status-label"/>
+                            </children>
+                        </VBox>
+
+                        <Separator/>
+
+                        <VBox spacing="6">
+                            <children>
+                                <Label text="Monedero seleccionado" styleClass="field-label"/>
+                                <ComboBox fx:id="comboMonederos"
+                                          promptText="Seleccionar monedero"
+                                          prefWidth="180.0"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+
+                <TabPane tabClosingPolicy="UNAVAILABLE"
+                         HBox.hgrow="ALWAYS">
                     <tabs>
-                        <Tab text="Depósito">
+
+                        <!-- ===== TAB: MOVIMIENTOS ===== -->
+                        <Tab text="Movimientos">
                             <content>
-                                <GridPane hgap="10.0" style="-fx-padding: 20;" vgap="15.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" prefWidth="130.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="317.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
+                                <VBox spacing="15"
+                                      styleClass="card">
                                     <children>
-                                        <Label text="Monto a Depositar:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="fieldDepositoMonto" promptText="Ej: 500.00" GridPane.columnIndex="1" />
-                                        <Button fx:id="btnDepositar" mnemonicParsing="false" onAction="#handleDepositar" prefHeight="40.0" prefWidth="500.0" text="Confirmar Depósito" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label text="Gestión de movimientos"
+                                               styleClass="card-title"/>
+
+                                        <GridPane hgap="12" vgap="10">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="35"/>
+                                                <ColumnConstraints percentWidth="65"/>
+                                            </columnConstraints>
+
+                                            <children>
+                                                <!-- Depósito -->
+                                                <Label text="Monto depósito:"
+                                                       GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <HBox spacing="8"
+                                                      GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <TextField fx:id="fieldDepositoMonto"
+                                                                   promptText="Ej: 50000"
+                                                                   HBox.hgrow="ALWAYS"/>
+                                                        <Button fx:id="btnDepositar"
+                                                                text="Depositar"
+                                                                onAction="#handleDepositar"
+                                                                styleClass="primary-button"/>
+                                                    </children>
+                                                </HBox>
+
+                                                <!-- Retiro -->
+                                                <Label text="Monto retiro:"
+                                                       GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <HBox spacing="8"
+                                                      GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <TextField fx:id="fieldRetiroMonto"
+                                                                   promptText="Ej: 20000"
+                                                                   HBox.hgrow="ALWAYS"/>
+                                                        <Button fx:id="btnRetirar"
+                                                                text="Retirar"
+                                                                onAction="#handleRetirar"
+                                                                styleClass="primary-button"/>
+                                                    </children>
+                                                </HBox>
+
+                                                <!-- Transferencia -->
+                                                <Label text="Monto transferencia:"
+                                                       GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <TextField fx:id="fieldTransferMonto"
+                                                           promptText="Ej: 30000"
+                                                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                                <Label text="Destino transferencia:"
+                                                       GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <HBox spacing="8"
+                                                      GridPane.rowIndex="3" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <TextField fx:id="fieldTransferDestino"
+                                                                   promptText="ID o usuario destino"
+                                                                   HBox.hgrow="ALWAYS"/>
+                                                        <Button fx:id="btnTransferir"
+                                                                text="Transferir"
+                                                                onAction="#handleTransferir"
+                                                                styleClass="primary-button"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+
+                                        <Label text="Los movimientos exitosos se registrarán en la actividad de abajo."
+                                               styleClass="hint-label"/>
                                     </children>
-                                </GridPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Retiro">
-                            <content>
-                                <GridPane hgap="10.0" style="-fx-padding: 20;" vgap="15.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" prefWidth="130.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="317.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <children>
-                                        <Label text="Monto a Retirar:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="fieldRetiroMonto" promptText="Ej: 100.00" GridPane.columnIndex="1" />
-                                        <Button fx:id="btnRetirar" mnemonicParsing="false" onAction="#handleRetirar" prefHeight="40.0" prefWidth="500.0" text="Confirmar Retiro" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    </children>
-                                </GridPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Transferencia">
-                            <content>
-                                <GridPane hgap="10.0" style="-fx-padding: 20;" vgap="15.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" prefWidth="130.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="317.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <children>
-                                        <Label text="Monto a Transferir:">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="fieldTransferMonto" promptText="Ej: 50.00" GridPane.columnIndex="1" />
-                                        <Button fx:id="btnTransferir" mnemonicParsing="false" onAction="#handleTransferir" prefHeight="40.0" prefWidth="500.0" text="Confirmar Transferencia" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                        <Label text="ID Monedero Destino:" GridPane.rowIndex="1">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="fieldTransferDestino" promptText="Ej: M-LUIS-01" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    </children>
-                                </GridPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Programar Transferencia">
-                            <content>
-                                <GridPane hgap="10.0" style="-fx-padding: 20;" vgap="15.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" prefWidth="130.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="317.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <children>
-                                        <Label text="Monto a Transferir:" />
-                                        <TextField fx:id="fieldMontoProgramado" promptText="Ej: 100.00" GridPane.columnIndex="1" />
-                                        <Label text="ID Monedero Destino:" GridPane.rowIndex="1" />
-                                        <TextField fx:id="fieldDestinoProgramado" promptText="Ej: LUIS-01" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <Label text="Fecha de Ejecución:" GridPane.rowIndex="2" />
-                                        <DatePicker fx:id="datePickerFecha" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                        <Label text="Periodicidad:" GridPane.rowIndex="3" />
-                                        <ComboBox fx:id="comboPeriodicidad" prefWidth="350.0" promptText="Seleccionar..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                        <Button fx:id="btnProgramarTx" onAction="#handleProgramarTransferencia" prefHeight="40.0" prefWidth="500.0" text="Programar Transferencia" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    </children>
-                                </GridPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Canjear Beneficios">
-                            <content>
-                                <VBox spacing="15.0" style="-fx-padding: 20;">
-                                   <children>
-                                       <Label text="Beneficios Disponibles (Bonos por Dinero)">
-                                           <font>
-                                               <Font name="System Bold" size="16.0" />
-                                           </font>
-                                       </Label>
-                                       <Label text="Selecciona un beneficio de la lista y presiona 'Canjear'.">
-                                           <font>
-                                               <Font size="12.0" />
-                                           </font>
-                                       </Label>
-                                       <ListView fx:id="listBeneficios" prefHeight="200.0" />
-                                       <Button fx:id="btnCanjear" onAction="#handleCanjearBeneficio" prefHeight="40.0" prefWidth="510.0" text="Canjear Beneficio Seleccionado" />
-                                   </children>
                                 </VBox>
                             </content>
                         </Tab>
+
+                        <!-- ===== TAB: PROGRAMAR TRANSACCIÓN ===== -->
+                        <Tab text="Programar">
+                            <content>
+                                <VBox spacing="15"
+                                      styleClass="card">
+                                    <children>
+                                        <Label text="Programar transacción"
+                                               styleClass="card-title"/>
+
+                                        <GridPane hgap="12" vgap="10">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="35"/>
+                                                <ColumnConstraints percentWidth="65"/>
+                                            </columnConstraints>
+
+                                            <children>
+                                                <Label text="Monto:"
+                                                       GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <TextField fx:id="fieldMontoProgramado"
+                                                           promptText="Ej: 100000"
+                                                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                                <Label text="Destino:"
+                                                       GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <TextField fx:id="fieldDestinoProgramado"
+                                                           promptText="ID o usuario destino"
+                                                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                                <Label text="Fecha ejecución:"
+                                                       GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <DatePicker fx:id="datePickerFecha"
+                                                            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                                <Label text="Periodicidad:"
+                                                       GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                                       styleClass="field-label"/>
+                                                <ComboBox fx:id="comboPeriodicidad"
+                                                          promptText="Selecciona periodicidad"
+                                                          GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                            </children>
+                                        </GridPane>
+
+                                        <HBox spacing="10"
+                                              alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Region HBox.hgrow="ALWAYS"/>
+                                                <Button fx:id="btnProgramarTx"
+                                                        text="Programar transacción"
+                                                        onAction="#handleProgramarTransferencia"
+                                                        styleClass="primary-button"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+
+                        <!-- ===== TAB: BENEFICIOS ===== -->
+                        <Tab text="Beneficios">
+                            <content>
+                                <VBox spacing="15"
+                                      styleClass="card">
+                                    <children>
+                                        <Label text="Beneficios disponibles"
+                                               styleClass="card-title"/>
+
+                                        <ListView fx:id="listBeneficios"
+                                                  VBox.vgrow="ALWAYS"/>
+
+                                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Label text="Selecciona un beneficio para canjear."
+                                                       styleClass="hint-label"
+                                                       HBox.hgrow="ALWAYS"/>
+                                                <Button fx:id="btnCanjear"
+                                                        text="Canjear beneficio"
+                                                        onAction="#handleCanjearBeneficio"
+                                                        styleClass="primary-button"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+
+                        <!-- ===== TAB: ANALÍTICA ===== -->
+                        <Tab text="Analítica">
+                            <content>
+                                <VBox spacing="15"
+                                      styleClass="card">
+                                    <children>
+                                        <Label text="Análisis del monedero"
+                                               styleClass="card-title"/>
+
+                                        <Label text="Ejecuta un análisis para ver estadísticas avanzadas de uso del monedero."
+                                               wrapText="true"
+                                               styleClass="hint-label"/>
+
+                                        <HBox alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Region HBox.hgrow="ALWAYS"/>
+                                                <Button fx:id="btnEjecutarAnalisis"
+                                                        text="Ejecutar análisis"
+                                                        onAction="#handleEjecutarAnalisis"
+                                                        styleClass="primary-button"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+
                     </tabs>
                 </TabPane>
+
             </children>
-        </VBox>
+        </HBox>
     </center>
+
+    <!-- =============== LOG / ACTIVIDAD ================= -->
     <bottom>
-        <VBox prefHeight="150.0" prefWidth="800.0" style="-fx-padding: 10; -fx-background-color: #ecf0f1;" BorderPane.alignment="CENTER">
+        <VBox styleClass="log-panel"
+              BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="0" right="20" bottom="20" left="20"/>
+            </padding>
+            <spacing>6</spacing>
             <children>
-                <Label text="Actividad y Notificaciones:">
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </Label>
-                <TextArea fx:id="areaLog" editable="false" prefHeight="120.0" prefWidth="780.0" wrapText="true" />
+                <Label text="Actividad y notificaciones"
+                       styleClass="card-title"/>
+                <TextArea fx:id="areaLog"
+                          editable="false"
+                          wrapText="true"
+                          prefRowCount="4"
+                          VBox.vgrow="ALWAYS"/>
             </children>
         </VBox>
     </bottom>
+
 </BorderPane>

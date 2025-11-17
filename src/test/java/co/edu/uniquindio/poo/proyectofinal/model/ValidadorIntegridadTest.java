@@ -15,7 +15,7 @@ class ValidadorIntegridadTest {
 
     @BeforeEach
     void setUp() {
-        cliente = new Cliente("C001", "Test", "b");
+        cliente = new Cliente("C001", "Test", "b", "a", "a");
         monedero = new Monedero("M-001", 1000, "Test");
         cliente.agregarMonedero(monedero);
         servicio = new ServicioTransacciones();

@@ -57,7 +57,6 @@ public class MonederoControlador {
         };
         servicioTx.registrarNotificador(notificadorGUI);
         servicioTx.registrarNotificador(new NotificadorWhatsApp());
-
         cargarDatosCliente();
         configurarComboPeriodicidad();
         cargarBeneficiosDisponibles();

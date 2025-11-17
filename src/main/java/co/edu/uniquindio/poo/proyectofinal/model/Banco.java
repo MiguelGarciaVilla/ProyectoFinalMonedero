@@ -33,6 +33,7 @@ public class Banco {
         Cliente c2 = new Cliente("C002", "Juan David", "email@juan.com", "juan", "4321");
         c2.agregarMonedero(new Monedero("JUAN-01", 500.0, "Gastos Diarios"));
 
+
         clientes.add(c1);
         clientes.add(c2);
     }

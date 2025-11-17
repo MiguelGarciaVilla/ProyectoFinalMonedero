@@ -16,7 +16,7 @@ public class ValidadorIntegridad {
     private boolean verificarRecursivo(List<Transaccion> historial, int index) {
         if (index == 0) {
             Transaccion primeraTx = historial.get(0);
-            return primeraTx.getHashAnterior().equals("GENESIS_BLOCK");
+            return primeraTx.getHashAnterior().equals("PRIMER_TRANSACCION");
         }
         Transaccion txActual = historial.get(index);
         Transaccion txAnterior = historial.get(index - 1);

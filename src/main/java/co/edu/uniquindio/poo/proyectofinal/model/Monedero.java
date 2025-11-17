@@ -61,7 +61,7 @@ public class Monedero {
 
     public void agregarTransaccionHistorial(Transaccion t) {
         Transaccion ultima = getUltimaTransaccion();
-        String hashAnterior = (ultima == null) ? "GENESIS_BLOCK" : ultima.getHashTransaccion();
+        String hashAnterior = (ultima == null) ? "PRIMER_TRANSACCION" : ultima.getHashTransaccion();
         t.setHashAnterior(hashAnterior);
         this.historialTransacciones.add(t);
     }

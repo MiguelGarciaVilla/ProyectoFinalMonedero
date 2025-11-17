@@ -8,17 +8,17 @@ import java.util.Iterator;
 
 public class GestorProgramador {
     private final List<TransaccionProgramada> colaDeTransacciones;
-    private final ServicioTransacciones servicioTransacciones; // El servicio que sabe cómo ejecutar
+    private final ServicioTransacciones servicioTransacciones;
 
     public GestorProgramador(ServicioTransacciones servicioTransacciones) {
         this.colaDeTransacciones = new ArrayList<>();
         this.servicioTransacciones = servicioTransacciones;
     }
 
-    public void programarTransaccion(TransaccionProgramada tx) {
-        this.colaDeTransacciones.add(tx);
+    public void programarTransaccion(TransaccionProgramada transaccionProgramada) {
+        this.colaDeTransacciones.add(transaccionProgramada);
         System.out.printf("[Gestor] Nueva transaccion programada (%s) para el %s.\n",
-                tx.getId(), tx.getFechaEjecucion().toString());
+                transaccionProgramada.getId(), transaccionProgramada.getFechaEjecucion().toString());
     }
 
     public void procesarCola(LocalDate fechaActual) {
@@ -28,28 +28,28 @@ public class GestorProgramador {
 
         Iterator<TransaccionProgramada> iterador = colaDeTransacciones.iterator();
         while (iterador.hasNext()) {
-            TransaccionProgramada tx = iterador.next();
+            TransaccionProgramada transaccionProgramada = iterador.next();
 
-            if (!tx.getFechaEjecucion().isAfter(fechaActual)) {
-                System.out.printf("Ejecutando transaccion programada: %s...\n", tx.getId());
+            if (!transaccionProgramada.getFechaEjecucion().isAfter(fechaActual)) {
+                System.out.printf("Ejecutando transaccion programada: %s...\n", transaccionProgramada.getId());
 
                 servicioTransacciones.realizarTransferencia(
-                        tx.getClienteOrigen(),
-                        tx.getMonederoOrigen(),
+                        transaccionProgramada.getClienteOrigen(),
+                        transaccionProgramada.getMonederoOrigen(),
                         null,
-                        tx.getMonederoDestino(),
-                        tx.getMonto(),
-                        tx.getFechaEjecucion()
+                        transaccionProgramada.getMonederoDestino(),
+                        transaccionProgramada.getMonto(),
+                        transaccionProgramada.getFechaEjecucion()
                 );
 
-                if (tx.getPeriodicidad() == Periodicidad.UNICA) {
+                if (transaccionProgramada.getPeriodicidad() == Periodicidad.UNICA) {
                     iterador.remove();
-                } else if (tx.getPeriodicidad() == Periodicidad.MENSUAL) {
-                    tx.setFechaEjecucion(fechaActual.plusMonths(1));
+                } else if (transaccionProgramada.getPeriodicidad() == Periodicidad.MENSUAL) {
+                    transaccionProgramada.setFechaEjecucion(fechaActual.plusMonths(1));
                     System.out.printf("Transaccion (%s) reprogramada para %s.\n",
-                            tx.getId(), tx.getFechaEjecucion().toString());
-                } else if (tx.getPeriodicidad() == Periodicidad.SEMANAL) {
-                    tx.setFechaEjecucion(fechaActual.plusWeeks(1));
+                            transaccionProgramada.getId(), transaccionProgramada.getFechaEjecucion().toString());
+                } else if (transaccionProgramada.getPeriodicidad() == Periodicidad.SEMANAL) {
+                    transaccionProgramada.setFechaEjecucion(fechaActual.plusWeeks(1));
                 }
             } else {
                 break;

@@ -14,6 +14,7 @@ public class Banco {
 
 
     public Banco() {
+        System.out.println(">>> Creando NUEVO Banco");
         clientes = new ArrayList<>();
         cargarDatosPrueba();
     }
@@ -30,7 +31,7 @@ public class Banco {
         c1.agregarMonedero(new Monedero("MIG-01", 1500.0, "Ahorros"));
         c1.agregarMonedero(new Monedero("MIG-02", 300.0, "Gastos Diarios"));
 
-        Cliente c2 = new Cliente("C002", "Juan David", "email@juan.com", "juan", "4321");
+        Cliente c2 = new Cliente("C002", "Juan Arias", "email@juan.com", "juan", "4321");
         c2.agregarMonedero(new Monedero("JUAN-01", 500.0, "Gastos Diarios"));
 
 

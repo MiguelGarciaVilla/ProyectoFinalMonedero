@@ -121,7 +121,7 @@ public class MonederoControlador {
             comboMonederos.getItems().add(claveCombo);
         }
         comboMonederos.getSelectionModel().selectFirst();
-        actualizarSaldoLabel();
+        actualizarLabelsCliente();
     }
 
 
@@ -277,21 +277,14 @@ public class MonederoControlador {
     @FXML
     private void handleLogout(javafx.event.ActionEvent event) {
         try {
-            // 1. Cargar el FXML del Login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinal/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/co/edu/uniquindio/poo/proyectofinal/login.fxml"));
             Parent root = loader.load();
-
-            // 2. Obtener la ventana actual (Stage) y cerrarla
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-
-            // 3. Crear y mostrar la nueva ventana de Login
-            Stage loginStage = new Stage();
-            loginStage.setTitle("Login - Monedero Virtual");
-            loginStage.setScene(new Scene(root));
-            loginStage.setResizable(false);
-            loginStage.show();
-
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             log("Error al intentar cerrar sesión.");

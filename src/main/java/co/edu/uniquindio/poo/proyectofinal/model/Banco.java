@@ -14,7 +14,6 @@ public class Banco {
 
 
     public Banco() {
-        System.out.println(">>> Creando NUEVO Banco");
         clientes = new ArrayList<>();
         cargarDatosPrueba();
     }
